@@ -1,0 +1,1639 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>비개발자를 위한 클로드코드 입문 | 잔재미코딩</title>
+  <meta name="description" content="코딩을 몰라도 괜찮아요. 한국어로 부탁하면 일을 대신 해주는 AI, 클로드코드를 처음부터 차근차근 배우는 잔재미코딩 입문 강의입니다. 서베이에 참여하면 추첨으로 무료 수강권을 드려요.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231243a6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <!-- 한글 웹폰트 (Pretendard). 인터넷이 없으면 컴퓨터 기본 글꼴로 보여요. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <script>document.documentElement.classList.add('js');</script>
+
+  <style>
+    /* ========== 색상 · 크기 설정 (잔재미코딩 로고 색에 맞췄어요) ========== */
+    :root {
+      --bg: #fbf9f3;
+      --surface: #ffffff;
+      --surface-2: #f5f1e3;
+      --text: #011c40;          /* 로고 남색 */
+      --muted: #4f5b6e;
+      --line: #e6e0cd;
+      --accent: #f24822;        /* 로고 주황 */
+      --accent-ink: #b83217;    /* 작은 글씨용 진한 주황 */
+      --accent-soft: #fde5dc;
+      --on-accent: #011c40;
+      --primary: #1243a6;       /* 로고 파랑 */
+      --primary-hover: #0c3486;
+      --primary-soft: #e6ecf8;
+      --on-primary: #ffffff;
+      --success: #1d7a4a;
+      --term-bg: #011c40;
+      --term-line: #143462;
+      --term-text: #e9eef6;
+      --term-muted: #9fb0c8;
+      --term-accent: #ff7a57;
+      --term-green: #8fd19e;
+      --shadow-sm: 0 1px 2px rgba(1, 28, 64, .05);
+      --shadow: 0 1px 2px rgba(1, 28, 64, .04), 0 12px 32px rgba(1, 28, 64, .10);
+      --radius: 16px;
+      --maxw: 1080px;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0a1426;
+        --surface: #10203a;
+        --surface-2: #0d1a30;
+        --text: #eef2f8;
+        --muted: #a4afc2;
+        --line: #23365a;
+        --accent: #ff6b47;
+        --accent-ink: #ff8f72;
+        --accent-soft: #3b1f1c;
+        --primary: #86a8f5;
+        --primary-hover: #a3bdf8;
+        --primary-soft: #18294a;
+        --on-primary: #07112a;
+        --success: #7cc995;
+        --term-bg: #050c18;
+        --term-line: #1a2a45;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+        --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px rgba(0, 0, 0, .35);
+        color-scheme: dark;
+      }
+    }
+
+    /* ========== 기본 ========== */
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    .container {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    h1, h2, h3 { letter-spacing: -0.025em; }
+
+    h2 {
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1.3;
+      font-weight: 800;
+      margin: 0 0 14px;
+    }
+
+    .kicker {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent-ink);
+      letter-spacing: .04em;
+      margin: 0 0 10px;
+    }
+
+    .section { padding: 104px 0; }
+    .section-alt { background: var(--surface-2); }
+
+    .section-head {
+      max-width: 640px;
+      margin-bottom: 44px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    /* ========== 로고 ==========
+       로고 이미지(600×200)의 바깥 여백을 잘라내고 글자 부분만 보여줘요. */
+    .logo {
+      display: block;
+      flex: none;
+      box-sizing: content-box;
+      width: 160px;
+      aspect-ratio: 538 / 96;
+      overflow: hidden;
+    }
+
+    .logo img {
+      display: block;
+      width: 111.524%;
+      max-width: none;
+      height: auto;
+      margin: -9.665% 0 0 -5.762%;
+      mix-blend-mode: multiply; /* 흰 배경을 페이지 배경색에 녹여요 */
+    }
+
+    @media (prefers-color-scheme: dark) {
+      /* 어두운 화면에서는 로고가 잘 보이도록 흰 바탕 위에 올려요 */
+      .logo {
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: #fff;
+      }
+    }
+
+    /* ========== 버튼 ========== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 24px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color .15s, border-color .15s, transform .15s;
+    }
+
+    .btn:active { transform: translateY(1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    .btn-ghost:hover { border-color: var(--text); }
+
+    .btn-cta {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+
+    .btn-cta:hover { background: #ff6a47; }
+
+    .btn-sm { padding: 8px 16px; font-size: 14px; }
+    .btn-lg { padding: 16px 32px; font-size: 17px; }
+
+    /* ========== 상단 메뉴 ========== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg);
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      -webkit-backdrop-filter: saturate(1.4) blur(12px);
+      backdrop-filter: saturate(1.4) blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s;
+    }
+
+    .site-header.is-scrolled { border-bottom-color: var(--line); }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      height: 64px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .brand-course {
+      padding-left: 14px;
+      border-left: 1px solid var(--line);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .nav a {
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav a:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    /* ========== 첫 화면 (히어로) ========== */
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 64px 0 104px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+    }
+
+    .hero::before {
+      top: -240px;
+      right: -200px;
+      width: 720px;
+      height: 720px;
+      background: radial-gradient(circle, var(--accent-soft), transparent 65%);
+    }
+
+    .hero::after {
+      top: 0;
+      left: -240px;
+      width: 560px;
+      height: 560px;
+      background: radial-gradient(circle, var(--primary-soft), transparent 65%);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .event-ribbon {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 22px;
+      padding: 5px 14px 5px 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color .15s;
+    }
+
+    .event-ribbon:hover { border-color: var(--accent); }
+
+    .event-ribbon-tag {
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--on-accent);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      font-size: clamp(40px, 6.4vw, 64px);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+    }
+
+    h1 .sub {
+      display: block;
+      margin-bottom: 6px;
+      font-size: .5em;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: -0.02em;
+    }
+
+    .hl { color: var(--accent); }
+
+    .lead {
+      max-width: 34em;
+      margin: 0 0 32px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 19px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 22px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .hero-meta li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta svg { color: var(--success); }
+    .hero-meta strong { color: var(--text); }
+
+    /* 터미널 예시 화면 */
+    .hero-demo { margin: 0; }
+
+    .terminal {
+      overflow: hidden;
+      border: 1px solid var(--term-line);
+      border-radius: var(--radius);
+      background: var(--term-bg);
+      box-shadow: var(--shadow);
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--term-line);
+    }
+
+    .terminal-bar i {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #2a4675;
+    }
+
+    .terminal-bar span {
+      margin-left: 8px;
+      color: var(--term-muted);
+      font-size: 13px;
+    }
+
+    .terminal-body {
+      min-height: 280px;
+      padding: 22px 22px 26px;
+      color: var(--term-text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Pretendard Variable", Pretendard, monospace;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .t-line { margin: 0 0 6px; }
+
+    .t-prompt {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+
+    .t-caret {
+      color: var(--term-accent);
+      font-weight: 700;
+    }
+
+    .t-cursor {
+      display: inline-block;
+      width: .55em;
+      height: 1.1em;
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      background: var(--term-accent);
+      animation: blink 1s steps(1) infinite;
+    }
+
+    .t-out {
+      padding-left: 22px;
+      color: var(--term-muted);
+      animation: lineIn .3s ease both;
+    }
+
+    .t-ask { color: var(--term-accent); }
+    .t-done { color: var(--term-green); }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    @keyframes lineIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .hero-demo figcaption {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* ========== 클로드코드란? ========== */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .compare-card {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .compare-card.is-accent {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .compare-label {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .is-accent .compare-label { color: var(--accent-ink); }
+
+    .compare-quote {
+      margin: 0 0 16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: var(--surface-2);
+    }
+
+    .compare-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .compare-note strong { color: var(--text); }
+
+    .compare-arrow {
+      align-self: center;
+      color: var(--muted);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .card .example {
+      margin-top: 18px;
+      padding: 10px 14px;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .section-alt .card .example { background: var(--bg); }
+
+    /* ========== 추천 대상 · FAQ (왼쪽 제목 + 오른쪽 내용) ========== */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .split .section-head { margin-bottom: 0; }
+
+    .not-for {
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      font-weight: 500;
+    }
+
+    .check {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      margin-top: 1px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ========== 커리큘럼 ========== */
+    .curri-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: 44px;
+    }
+
+    .curri-head .section-head { margin-bottom: 0; }
+
+    .weeks {
+      display: grid;
+      gap: 32px;
+    }
+
+    .week {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 24px;
+    }
+
+    .week-label {
+      margin: 16px 0 0;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .week-label small {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .lessons {
+      display: grid;
+      gap: 10px;
+    }
+
+    .lesson {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .lesson.is-open {
+      border-color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+      box-shadow: var(--shadow-sm);
+    }
+
+    .lesson h3 {
+      margin: 0;
+      font-size: inherit;
+      letter-spacing: normal;
+    }
+
+    .lesson-toggle {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 18px 20px;
+      border: 0;
+      border-radius: 14px;
+      background: none;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .lesson-num {
+      min-width: 26px;
+      color: var(--accent-ink);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .lesson-title {
+      flex: 1;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    .lesson-chevron {
+      flex: none;
+      color: var(--muted);
+      transition: transform .25s ease;
+    }
+
+    .lesson.is-open .lesson-chevron { transform: rotate(180deg); }
+
+    /* 접힘/펼침 애니메이션. 자바스크립트가 꺼져 있으면 모두 펼쳐진 채로 보여요. */
+    .lesson-panel {
+      display: grid;
+      grid-template-rows: 1fr;
+      transition: grid-template-rows .3s ease, visibility .3s;
+    }
+
+    .js .lesson:not(.is-open) .lesson-panel {
+      grid-template-rows: 0fr;
+      visibility: hidden;
+    }
+
+    .lesson-panel-inner { overflow: hidden; }
+
+    .lesson-content {
+      padding: 0 20px 20px 62px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .lesson-content p { margin: 0 0 10px; }
+
+    .lesson-content ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .lesson-content li { margin: 3px 0; }
+
+    .tag {
+      display: inline-block;
+      margin-right: 6px;
+      padding: 1px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ========== FAQ ========== */
+    .faq-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .faq-list details {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+
+    .faq-list summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      font-weight: 700;
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .faq-list summary::-webkit-details-marker { display: none; }
+
+    .faq-list summary::after {
+      content: "+";
+      flex: none;
+      color: var(--muted);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1;
+      transition: transform .2s;
+    }
+
+    .faq-list details[open] summary::after { transform: rotate(45deg); }
+
+    .faq-list details p {
+      margin: 0;
+      padding: 0 20px 20px;
+      color: var(--muted);
+    }
+
+    .section-head a,
+    .faq-list a { color: var(--primary); }
+
+    /* ========== 서베이 이벤트 ========== */
+    .prizes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .prize {
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .prize.is-first {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .prize .icon {
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+    }
+
+    .prize-rank {
+      margin: 0 0 4px;
+      color: var(--accent-ink);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .prize h3 {
+      margin: 0 0 8px;
+      font-size: clamp(26px, 3.4vw, 32px);
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+    }
+
+    .prize-desc {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .sub-title {
+      margin: 0 0 18px;
+      font-size: 20px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 0 0 20px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 22px 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+
+    .step-num {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--on-primary);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .step-desc {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .schedule {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 0 0 56px;
+    }
+
+    .schedule div {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding: 18px 22px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+
+    .schedule dt {
+      flex: none;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .schedule dd {
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .apply-card {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 72px 32px;
+      border-radius: 28px;
+      background: var(--term-bg);
+      color: var(--term-text);
+      text-align: center;
+    }
+
+    .apply-card::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: 50%;
+      bottom: -360px;
+      width: 760px;
+      height: 520px;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(242, 72, 34, .32), transparent 65%);
+    }
+
+    .apply-card h2 { color: #fff; }
+
+    .apply-prompt {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 100%;
+      margin: 8px 0 20px;
+      padding: 12px 20px;
+      border: 1px solid var(--term-line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .04);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Pretendard Variable", Pretendard, monospace;
+      font-size: 16px;
+    }
+
+    .apply-card p {
+      margin: 0 auto 32px;
+      max-width: 30em;
+      color: var(--term-muted);
+    }
+
+    .apply-card .apply-note {
+      margin: 18px auto 0;
+      font-size: 14px;
+    }
+
+    .apply-note a {
+      color: var(--term-text);
+      white-space: nowrap;
+    }
+
+    /* ========== 바닥글 ========== */
+    .site-footer {
+      padding: 56px 0 48px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .footer-brand .logo {
+      width: 132px;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand p { margin: 0; }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ========== 스크롤하면 부드럽게 나타나기 ========== */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .6s ease, transform .6s ease;
+      transition-delay: var(--d, 0s);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ========== 화면 크기별 조정 (태블릿 · 휴대폰) ========== */
+    @media (max-width: 900px) {
+      .hero-inner,
+      .split { grid-template-columns: 1fr; }
+      .hero-inner { gap: 48px; }
+      .split { gap: 32px; }
+      .cards { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .nav { display: none; }
+      .header-inner .btn { margin-left: auto; }
+    }
+
+    @media (max-width: 760px) {
+      .compare { grid-template-columns: 1fr; }
+      .compare-arrow { justify-self: center; transform: rotate(90deg); }
+      .week { grid-template-columns: 1fr; gap: 12px; }
+      .week-label { margin-top: 0; }
+      .week-label small { display: inline; margin-left: 6px; }
+      .prizes,
+      .schedule { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 16px; }
+      .section { padding: 72px 0; }
+      .hero { padding: 40px 0 72px; }
+      .brand-course { display: none; }
+      .header-inner .logo { width: 136px; }
+      .terminal-body { min-height: 300px; padding: 18px; font-size: 14px; }
+      .lesson-content { padding-left: 20px; }
+      .steps { grid-template-columns: 1fr; }
+      .prize { padding: 26px; }
+      .apply-card { padding: 56px 20px; }
+    }
+
+    /* 움직임 줄이기 설정을 켠 분께는 애니메이션을 빼고 보여줘요 */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .t-cursor, .t-out { animation: none; }
+      .js .reveal { opacity: 1; transform: none; transition: none; }
+      .lesson-panel, .lesson-chevron { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. 상단 메뉴 -->
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="#top">
+        <span class="logo"><img src="logo2026_main.png" alt="잔재미코딩" width="600" height="200"></span>
+        <span class="brand-course">클로드코드 입문</span>
+      </a>
+      <nav class="nav" aria-label="주요 메뉴">
+        <a href="#about">클로드코드란?</a>
+        <a href="#curriculum">커리큘럼</a>
+        <a href="#faq">FAQ</a>
+        <a href="#event">이벤트</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" href="#event">서베이 참여</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- 2. 첫 화면 -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <a class="event-ribbon" href="#event">
+            <span class="event-ribbon-tag">이벤트</span>
+            서베이 참여하면 무료 수강권 추첨!
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <h1><span class="sub">비개발자를 위한</span><span class="hl">클로드코드</span> 입문</h1>
+          <p class="lead">코드는 몰라도 괜찮아요. 한국어로 부탁하면 파일을 만들고, 정리하고, 웹페이지까지 만들어 주는 AI — 클로드코드를 첫 설치부터 차근차근 배워요.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#event">서베이 참여하기</a>
+            <a class="btn btn-ghost" href="#curriculum">커리큘럼 보기</a>
+          </div>
+          <ul class="hero-meta">
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>4주 · <strong>8강</strong> 구성</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><strong>실습</strong> 중심</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Windows · Mac 모두 가능</li>
+          </ul>
+        </div>
+
+        <figure class="hero-demo">
+          <div class="terminal">
+            <div class="terminal-bar" aria-hidden="true"><i></i><i></i><i></i><span>내 컴퓨터 · 클로드코드</span></div>
+            <!-- 아래 내용은 자바스크립트가 여러 예시로 바꿔 가며 보여줘요 -->
+            <div class="terminal-body" id="terminal" aria-hidden="true">
+              <div class="t-line t-prompt"><span class="t-caret">&gt;</span><span class="t-text">회의록 폴더에서 이번 달 파일만 모아서 한 장으로 요약해줘</span></div>
+              <div class="t-line t-out">회의록 폴더에서 10월 파일 6개를 찾았어요</div>
+              <div class="t-line t-out">결정 사항과 할 일을 골라내는 중…</div>
+              <div class="t-line t-out t-done">✓ 10월_회의요약.md 를 만들었어요</div>
+            </div>
+          </div>
+          <figcaption>실제로 이렇게, 한국어로 부탁하면 돼요.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 3. 클로드코드란? -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="kicker">클로드코드란?</p>
+          <h2>알려주는 AI에서,<br>직접 해주는 AI로</h2>
+          <p>클로드코드는 Anthropic이 만든 AI 도구예요. 채팅창에서 답을 받아 복사·붙여넣기 하던 방식과 달리, 내 컴퓨터의 파일을 직접 읽고 만들고 고쳐 줘요.</p>
+        </div>
+
+        <div class="compare reveal">
+          <div class="compare-card">
+            <p class="compare-label">일반 AI 채팅</p>
+            <p class="compare-quote">“엑셀에서 중복을 지우려면 ① 데이터 탭을 열고 ② ‘중복된 항목 제거’를 누른 뒤 ③ …”</p>
+            <p class="compare-note">방법을 <strong>알려줘요</strong>. 따라 하는 건 내 몫이에요.</p>
+          </div>
+          <div class="compare-arrow" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+          <div class="compare-card is-accent">
+            <p class="compare-label">클로드코드</p>
+            <p class="compare-quote">“고객명단.xlsx에서 중복 32건을 지우고, 정리한 파일을 새로 저장했어요.”</p>
+            <p class="compare-note">일을 <strong>직접 해줘요</strong>. 나는 결과만 확인하면 돼요.</p>
+          </div>
+        </div>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></div>
+            <h3>한국어로 부탁하면 돼요</h3>
+            <p>명령어를 외울 필요 없어요. 동료에게 일을 부탁하듯 평소 말투로 요청하면 돼요.</p>
+          </article>
+          <article class="card reveal" style="--d: .08s">
+            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></div>
+            <h3>내 파일로 바로 일해요</h3>
+            <p>엑셀, 문서, 사진처럼 내 컴퓨터에 있는 자료를 그 자리에서 정리하고 만들어요.</p>
+          </article>
+          <article class="card reveal" style="--d: .16s">
+            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h3>하기 전에 먼저 물어봐요</h3>
+            <p>파일을 바꾸거나 명령을 실행하기 전에 허락을 구해요. 처음이어도 안심하고 쓸 수 있어요.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 추천 대상 -->
+    <section class="section section-alt" id="for-you">
+      <div class="container split">
+        <div class="section-head reveal">
+          <p class="kicker">추천 대상</p>
+          <h2>이런 분께<br>딱 맞아요</h2>
+          <p>코딩을 배우는 수업이 아니라, AI에게 일을 맡기는 법을 배우는 수업이에요.</p>
+          <p class="not-for">※ 이미 개발 경험이 있다면 내용이 쉽게 느껴질 수 있어요.</p>
+        </div>
+        <ul class="checklist">
+          <li class="reveal"><span class="check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>코딩은 해본 적 없지만, AI로 일을 더 빨리 끝내고 싶은 직장인</li>
+          <li class="reveal" style="--d: .05s"><span class="check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>매주 반복되는 파일 정리·보고서 작업이 지겨운 분</li>
+          <li class="reveal" style="--d: .1s"><span class="check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ChatGPT나 Claude 채팅은 써봤는데, 그다음 단계가 궁금한 분</li>
+          <li class="reveal" style="--d: .15s"><span class="check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>개발자와 일하며 ‘개발이 어떻게 돌아가는지’ 감을 잡고 싶은 기획자·디자이너·마케터</li>
+          <li class="reveal" style="--d: .2s"><span class="check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>머릿속 아이디어를 작은 웹페이지나 도구로 직접 만들어 보고 싶은 분</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5. 커리큘럼 (수업 제목을 누르면 펼쳐져요) -->
+    <section class="section" id="curriculum">
+      <div class="container">
+        <div class="curri-head reveal">
+          <div class="section-head">
+            <p class="kicker">커리큘럼</p>
+            <h2>4주, 8번의 수업으로<br>혼자 쓸 수 있을 때까지</h2>
+            <p>매 수업은 짧은 설명과 긴 실습으로 이뤄져요. 막혀도 괜찮아요. 막혔을 때 푸는 법까지 함께 배워요.</p>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="expand-all" type="button" hidden>모두 펼치기</button>
+        </div>
+
+        <div class="weeks">
+          <div class="week reveal">
+            <p class="week-label">1주차 <small>시작하기</small></p>
+            <div class="lessons">
+              <div class="lesson is-open">
+                <h3><button class="lesson-toggle" type="button" aria-expanded="true" aria-controls="lesson-1">
+                  <span class="lesson-num">01</span><span class="lesson-title">클로드코드와 첫 만남</span>
+                  <svg class="lesson-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button></h3>
+                <div class="lesson-panel" id="lesson-1"><div class="lesson-panel-inner"><div class="lesson-content">
+                  <p>대답만 하는 AI와 ‘직접 일하는 AI’가 어떻게 다른지 알아보고, 설치부터 첫 대화까지 함께해요.</p>
+                  <ul>
+                    <li>클로드코드로 할 수 있는 일과 할 수 없는 일</li>
+                    <li>Windows · Mac 설치와 로그인</li>
+                    <li><span class="tag">실습</span>내 폴더를 열고 “여기 뭐가 있어?” 물어보기</li>
+                  </ul>
+                </div></div></div>
+              </div>
+              <div class="lesson">
+                <h3><button class="lesson-toggle" type="button" aria-expanded="false" aria-controls="lesson-2">
+                  <span class="lesson-num">02</span><span class="lesson-title">터미널, 딱 이만큼만</span>
+                  <svg class="lesson-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button></h3>
+                <div class="lesson-panel" id="lesson-2"><div class="lesson-panel-inner"><div class="lesson-content">
+                  <p>까만 화면이 낯설어도 괜찮아요. 폴더·파일·경로 개념을 그림으로 이해하고, 꼭 필요한 조작만 익혀요.</p>
+                  <ul>
+                    <li>폴더와 경로, 그림으로 이해하기</li>
+                    <li>원하는 폴더에서 클로드코드 시작하기</li>
+                    <li><span class="tag">실습</span>연습용 폴더를 만들고 파일 정리 맡겨 보기</li>
+                  </ul>
+                </div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="week reveal">
+            <p class="week-label">2주차 <small>말로 시키기</small></p>
+            <div class="lessons">
+              <div class="lesson">
+                <h3><button class="lesson-toggle" type="button" aria-expanded="false" aria-controls="lesson-3">
+                  <span class="lesson-num">03</span><span class="lesson-title">잘 부탁하는 법</span>
+                  <svg class="lesson-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button></h3>
+                <div class="lesson-panel" id="lesson-3"><div class="lesson-panel-inner"><div class="lesson-content">
+                  <p>같은 일도 어떻게 부탁하느냐에 따라 결과가 달라져요. 원하는 결과를 한 번에 얻는 요청법을 익혀요.</p>
+                  <ul>
+                    <li>목표 · 예시 · 조건, 좋은 부탁의 세 가지 요소</li>
+                    <li>결과가 마음에 안 들 때 다시 고쳐 달라고 하는 법</li>
+                    <li><span class="tag">실습</span>같은 부탁을 세 가지 방식으로 해보고 비교하기</li>
+                  </ul>
+                </div></div></div>
+              </div>
+              <div class="lesson">
+                <h3><button class="lesson-toggle" type="button" aria-expanded="false" aria-controls="lesson-4">
+                  <span class="lesson-num">04</span><span class="lesson-title">첫 결과물, 나만의 웹페이지</span>
+                  <svg class="lesson-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button></h3>
+                <div class="lesson-panel" id="lesson-4"><div class="lesson-panel-inner"><div class="lesson-content">
+                  <p>자기소개 페이지를 만들고, 말로 색과 구성을 바꿔 가며 완성해요. 지금 보고 계신 이 페이지도 이렇게 만들었어요.</p>
+                  <ul>
+                    <li>웹페이지가 만들어지는 원리, 아주 조금만</li>
+                    <li>“더 따뜻한 느낌으로” 같은 말로 디자인 고치기</li>
+                    <li><span class="tag">실습</span>내 소개 페이지 완성하기</li>
+                  </ul>
+                </div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="week reveal">
+            <p class="week-label">3주차 <small>업무에 쓰기</small></p>
+            <div class="lessons">
+              <div class="lesson">
+                <h3><button class="lesson-toggle" type="button" aria-expanded="false" aria-controls="lesson-5">
+                  <span class="lesson-num">05</span><span class="lesson-title">반복 업무 자동화</span>
+                  <svg class="lesson-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button></h3>
+                <div class="lesson-panel" id="lesson-5"><div class="lesson-panel-inner"><div class="lesson-content">
+                  <p>매주 손으로 하던 일을 한 줄 부탁으로 끝내요.</p>
+                  <ul>
+                    <li>엑셀 · CSV 파일 합치고 정리하기</li>
+                    <li>파일 이름 한꺼번에 바꾸기, 문서 요약하기</li>
+                    <li><span class="tag">실습</span>내 업무 중 반복되는 일 하나 자동화하기</li>
+                  </ul>
+                </div></div></div>
+              </div>
+              <div class="lesson">
+                <h3><button class="lesson-toggle" type="button" aria-expanded="false" aria-controls="lesson-6">
+                  <span class="lesson-num">06</span><span class="lesson-title">나만의 AI 비서 만들기</span>
+                  <svg class="lesson-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button></h3>
+                <div class="lesson-panel" id="lesson-6"><div class="lesson-panel-inner"><div class="lesson-content">
+                  <p>내가 일하는 방식을 한 번 적어 두면, 클로드코드가 매번 기억하고 맞춰서 일해요.</p>
+                  <ul>
+                    <li>CLAUDE.md 파일로 나만의 규칙 알려 주기</li>
+                    <li>자주 하는 부탁을 나만의 명령으로 저장하기</li>
+                    <li><span class="tag">실습</span>내 보고서 스타일을 기억하는 비서 만들기</li>
+                  </ul>
+                </div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="week reveal">
+            <p class="week-label">4주차 <small>안전하게, 끝까지</small></p>
+            <div class="lessons">
+              <div class="lesson">
+                <h3><button class="lesson-toggle" type="button" aria-expanded="false" aria-controls="lesson-7">
+                  <span class="lesson-num">07</span><span class="lesson-title">실수해도 괜찮아요</span>
+                  <svg class="lesson-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button></h3>
+                <div class="lesson-panel" id="lesson-7"><div class="lesson-panel-inner"><div class="lesson-content">
+                  <p>AI에게 일을 맡길 때 꼭 필요한 안전 습관을 익혀요.</p>
+                  <ul>
+                    <li>허락을 구하는 화면, 제대로 읽는 법</li>
+                    <li>작업 되돌리기와 백업하는 습관</li>
+                    <li>결과를 검토하고 확인하는 요령</li>
+                  </ul>
+                </div></div></div>
+              </div>
+              <div class="lesson">
+                <h3><button class="lesson-toggle" type="button" aria-expanded="false" aria-controls="lesson-8">
+                  <span class="lesson-num">08</span><span class="lesson-title">미니 프로젝트 &amp; 발표</span>
+                  <svg class="lesson-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button></h3>
+                <div class="lesson-panel" id="lesson-8"><div class="lesson-panel-inner"><div class="lesson-content">
+                  <p>내 일 하나를 골라 처음부터 끝까지 클로드코드와 함께 완성하고, 서로 결과를 나눠요.</p>
+                  <ul>
+                    <li>주제 정하고 계획 세우기</li>
+                    <li><span class="tag">실습</span>혼자 힘으로 완성해 보기</li>
+                    <li>결과 발표와 피드백</li>
+                  </ul>
+                </div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. 수강 후 할 수 있는 것 -->
+    <section class="section section-alt" id="outcomes">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="kicker">수강 후에는</p>
+          <h2>이런 걸 직접 할 수 있게 돼요</h2>
+        </div>
+        <div class="cards">
+          <article class="card reveal">
+            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/></svg></div>
+            <h3>나만의 웹페이지</h3>
+            <p>자기소개, 가게 소개, 행사 안내 페이지를 직접 만들고 고칠 수 있어요.</p>
+            <p class="example">“행사 안내 페이지 만들어줘. 신청 버튼도 넣어서.”</p>
+          </article>
+          <article class="card reveal" style="--d: .08s">
+            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg></div>
+            <h3>반복 업무 자동화</h3>
+            <p>파일 정리, 데이터 합치기, 문서 요약처럼 시간을 잡아먹던 일을 맡길 수 있어요.</p>
+            <p class="example">“이번 주 매출 파일들 합쳐서 요약표 만들어줘.”</p>
+          </article>
+          <article class="card reveal" style="--d: .16s">
+            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.8 5.41a2 2 0 0 1-1.27 1.27L7.76 16.24l1.8-5.41a2 2 0 0 1 1.27-1.27z"/></svg></div>
+            <h3>AI와 일하는 감각</h3>
+            <p>무엇을 맡기고, 어떻게 부탁하고, 무엇을 확인할지 스스로 판단할 수 있어요.</p>
+            <p class="example">“바꾸기 전에 뭘 바꿀지 먼저 보여줘.”</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 자주 묻는 질문 -->
+    <section class="section" id="faq">
+      <div class="container split">
+        <div class="section-head reveal">
+          <p class="kicker">자주 묻는 질문</p>
+          <h2>궁금한 점,<br>미리 답해 드려요</h2>
+          <p>여기에 없는 질문은 <a href="mailto:contact@fun-coding.org">contact@fun-coding.org</a>로 편하게 문의해 주세요.</p>
+        </div>
+        <div class="faq-list reveal">
+          <details>
+            <summary>정말 코딩을 하나도 몰라도 되나요?</summary>
+            <p>네. 이 강의는 코딩 경험이 없는 분을 기준으로 만들었어요. 코드를 직접 쓰는 대신, 클로드코드에게 한국어로 부탁하고 결과를 확인하는 방법을 배워요.</p>
+          </details>
+          <details>
+            <summary>무엇을 준비해야 하나요?</summary>
+            <p>인터넷이 되는 노트북(Windows 또는 Mac)과 Claude 유료 요금제 계정이 필요해요. 설치와 로그인은 첫 시간에 함께 진행하니 미리 해 오지 않아도 괜찮아요.</p>
+          </details>
+          <details>
+            <summary>영어를 잘 못해도 괜찮나요?</summary>
+            <p>괜찮아요. 클로드코드는 한국어 부탁도 잘 알아듣고 한국어로 답해요. 화면에 나오는 영어 메뉴는 수업에서 하나하나 풀어서 설명해 드려요.</p>
+          </details>
+          <details>
+            <summary>제 컴퓨터가 망가지지는 않을까요?</summary>
+            <p>클로드코드는 파일을 바꾸거나 명령을 실행하기 전에 먼저 허락을 구해요. 수업은 연습용 폴더에서 시작하고, 안전하게 쓰는 습관부터 익혀요.</p>
+          </details>
+          <details>
+            <summary>강의가 끝난 뒤에도 혼자 쓸 수 있을까요?</summary>
+            <p>그게 이 강의의 목표예요. 마지막 시간에는 내 업무 하나를 골라 처음부터 끝까지 혼자 완성해 보는 미니 프로젝트를 진행해요.</p>
+          </details>
+          <details>
+            <summary>서베이 이벤트에는 누가 참여할 수 있나요?</summary>
+            <p>잔재미코딩 강의에 관심 있는 분이라면 누구나 참여할 수 있어요. 입문자도, 기존 수강생도 모두 환영해요. 당첨되신 분께는 응모 마감 후 1주 이내에 개별로 연락드려요.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. 학습자 서베이 이벤트 (내용 출처: event_info.txt) -->
+    <section class="section section-alt" id="event">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="kicker">잔재미코딩 학습자 서베이 이벤트</p>
+          <h2>다음 강의는<br>당신의 의견으로 만들어집니다</h2>
+          <p>잔재미코딩 강의에 관심 있는 누구나 참여할 수 있어요. 입문자도, 기존 수강생도 환영해요. 5분 응답으로 다음 강의를 함께 만들어 주세요.</p>
+        </div>
+
+        <div class="prizes">
+          <article class="prize is-first reveal">
+            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg></div>
+            <p class="prize-rank">1등 · 5명</p>
+            <h3>무료 수강권</h3>
+            <p class="prize-desc">잔재미코딩 강의 중 원하는 강의를 골라 무료로 들을 수 있어요.</p>
+          </article>
+          <article class="prize reveal" style="--d: .08s">
+            <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
+            <p class="prize-rank">2등 · 100명</p>
+            <h3>30% 할인 쿠폰</h3>
+            <p class="prize-desc">잔재미코딩의 모든 강의에 쓸 수 있어요.</p>
+          </article>
+        </div>
+
+        <h3 class="sub-title reveal">참여 방법</h3>
+        <ol class="steps reveal">
+          <li><span class="step-num" aria-hidden="true">1</span><strong>페이지 둘러보기</strong><span class="step-desc">강의 소개를 천천히 살펴봐요</span></li>
+          <li><span class="step-num" aria-hidden="true">2</span><strong>‘서베이 참여하기’ 클릭</strong><span class="step-desc">아래 버튼을 눌러요</span></li>
+          <li><span class="step-num" aria-hidden="true">3</span><strong>구글 폼에 5분 응답</strong><span class="step-desc">배우고 싶은 내용을 알려 주세요</span></li>
+          <li><span class="step-num" aria-hidden="true">4</span><strong>자동으로 추첨 응모</strong><span class="step-desc">응답만 하면 응모 끝!</span></li>
+        </ol>
+
+        <dl class="schedule reveal">
+          <!-- 정확한 응모 날짜가 정해지면 '4주간'을 날짜로 바꿔 주세요 -->
+          <div><dt>응모 기간</dt><dd>4주간</dd></div>
+          <div><dt>당첨자 발표</dt><dd>응모 마감 후 1주 이내 (개별 연락)</dd></div>
+        </dl>
+
+        <div class="apply-card reveal">
+          <h2>5분이면 충분해요</h2>
+          <div class="apply-prompt"><span class="t-caret">&gt;</span>다음엔 이런 강의가 듣고 싶어요<span class="t-cursor" aria-hidden="true"></span></div>
+          <p>응답하면 자동으로 추첨에 응모돼요. 여러분의 한 줄이 다음 강의가 됩니다.</p>
+          <!-- 구글 폼 주소: 지금은 event_info.txt에 적힌 예시 주소예요. 실제 주소로 바꿔 주세요 -->
+          <a class="btn btn-cta btn-lg" href="https://forms.gle/example" target="_blank" rel="noopener">
+            서베이 참여하기
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+          <p class="apply-note">구글 폼이 새 창으로 열려요 · 문의 <a href="mailto:contact@fun-coding.org">contact@fun-coding.org</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 9. 바닥글 -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="logo"><img src="logo2026_main.png" alt="잔재미코딩" width="600" height="200"></span>
+          <p>입문자도 단계별로 따라올 수 있는 IT·AI 교육 플랫폼.</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="https://fun-coding.org" target="_blank" rel="noopener">fun-coding.org</a></li>
+          <li><a href="https://school.fun-coding.org" target="_blank" rel="noopener">school.fun-coding.org</a></li>
+          <li><a href="mailto:contact@fun-coding.org">contact@fun-coding.org</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year">2026</span> 잔재미코딩 · 비개발자를 위한 클로드코드 입문</span>
+        <span>이 페이지도 클로드코드로 만들었어요.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ---------- 상단 메뉴: 스크롤하면 아래쪽에 경계선 표시 ---------- */
+      const header = document.querySelector('.site-header');
+      const updateHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+      window.addEventListener('scroll', updateHeader, { passive: true });
+      updateHeader();
+
+      /* ---------- 터미널 예시: 한국어로 부탁하면 클로드코드가 일하는 모습 ---------- */
+      // 예시를 바꾸거나 늘리고 싶으면 아래 목록을 고치면 돼요.
+      const demos = [
+        {
+          prompt: '회의록 폴더에서 이번 달 파일만 모아서 한 장으로 요약해줘',
+          lines: [
+            { text: '회의록 폴더에서 10월 파일 6개를 찾았어요' },
+            { text: '결정 사항과 할 일을 골라내는 중…' },
+            { text: '✓ 10월_회의요약.md 를 만들었어요', type: 'done' },
+          ],
+        },
+        {
+          prompt: '우리 빵집 소개 웹페이지 만들어줘. 따뜻한 느낌으로!',
+          lines: [
+            { text: '구성: 인사말 · 대표 메뉴 · 오시는 길' },
+            { text: '크림색 배경에 갈색 포인트로 꾸미는 중…' },
+            { text: '✓ index.html 완성! 브라우저로 열어 보세요', type: 'done' },
+          ],
+        },
+        {
+          prompt: '다운로드 폴더 사진들, 찍은 달별로 폴더 나눠서 정리해줘',
+          lines: [
+            { text: '사진 148장을 찾았어요' },
+            { text: '월별 폴더 3개를 만들고 옮겨도 될까요?  → 예', type: 'ask' },
+            { text: '✓ 2026-08 · 2026-09 · 2026-10 폴더로 정리했어요', type: 'done' },
+          ],
+        },
+      ];
+
+      const term = document.getElementById('terminal');
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      function addPrompt() {
+        const row = document.createElement('div');
+        row.className = 't-line t-prompt';
+        row.innerHTML = '<span class="t-caret">&gt;</span><span class="t-text"><span class="t-typed"></span><span class="t-cursor"></span></span>';
+        term.appendChild(row);
+        return row;
+      }
+
+      function addOutput(line) {
+        const el = document.createElement('div');
+        el.className = 't-line t-out' + (line.type ? ' t-' + line.type : '');
+        el.textContent = line.text;
+        term.appendChild(el);
+      }
+
+      function renderStatic(demo) {
+        term.textContent = '';
+        const row = addPrompt();
+        row.querySelector('.t-typed').textContent = demo.prompt;
+        row.querySelector('.t-cursor').remove();
+        demo.lines.forEach(addOutput);
+      }
+
+      async function playDemo(demo) {
+        term.textContent = '';
+        const row = addPrompt();
+        const typed = row.querySelector('.t-typed');
+        for (const ch of Array.from(demo.prompt)) {
+          typed.textContent += ch;
+          await wait(ch === ' ' ? 30 : 55 + Math.random() * 40);
+        }
+        await wait(500);
+        row.querySelector('.t-cursor').remove();
+        for (const line of demo.lines) {
+          await wait(750);
+          addOutput(line);
+        }
+        await wait(3200);
+      }
+
+      if (reduceMotion) {
+        let i = 0;
+        renderStatic(demos[i]);
+        setInterval(() => {
+          i = (i + 1) % demos.length;
+          renderStatic(demos[i]);
+        }, 8000);
+      } else {
+        (async () => {
+          for (let i = 0; ; i = (i + 1) % demos.length) {
+            await playDemo(demos[i]);
+          }
+        })();
+      }
+
+      /* ---------- 커리큘럼: 수업 제목을 누르면 펼치고 접기 ---------- */
+      const lessons = Array.from(document.querySelectorAll('.lesson'));
+      const expandAll = document.getElementById('expand-all');
+      const isOpen = (lesson) => lesson.classList.contains('is-open');
+
+      function setLesson(lesson, open) {
+        lesson.classList.toggle('is-open', open);
+        lesson.querySelector('.lesson-toggle').setAttribute('aria-expanded', String(open));
+      }
+
+      function syncExpandAll() {
+        expandAll.textContent = lessons.every(isOpen) ? '모두 접기' : '모두 펼치기';
+      }
+
+      lessons.forEach((lesson) => {
+        lesson.querySelector('.lesson-toggle').addEventListener('click', () => {
+          setLesson(lesson, !isOpen(lesson));
+          syncExpandAll();
+        });
+      });
+
+      expandAll.addEventListener('click', () => {
+        const open = !lessons.every(isOpen);
+        lessons.forEach((lesson) => setLesson(lesson, open));
+        syncExpandAll();
+      });
+
+      expandAll.hidden = false;
+      syncExpandAll();
+
+      /* ---------- 스크롤하면 내용이 부드럽게 나타나기 ---------- */
+      const revealEls = document.querySelectorAll('.reveal');
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        revealEls.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach((el) => observer.observe(el));
+      }
+
+      /* ---------- 바닥글 연도 자동 표시 ---------- */
+      document.getElementById('year').textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
